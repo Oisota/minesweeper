@@ -1,0 +1,22 @@
+body {
+	font-family: sans-serif;
+}
+
+.game {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+}
+
+.cell {
+	width: 3rem;
+	height: 3rem;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+}

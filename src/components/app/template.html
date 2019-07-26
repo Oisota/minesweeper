@@ -1,0 +1,13 @@
+<div class="game">
+	<h1>Mine-Sweeper</h1>
+	<button v-on:click="reset" type="button">Reset</button>
+	<div v-for="(row, i) in grid" class="row">
+		<button
+			v-for="(btn, j) in row"
+			v-on:click="cellClick(i, j)"
+			v-on:contextmenu.prevent="flag(i, j)"
+			class="cell"
+			type="button"
+			v-bind:style="btn.style">{{btn.text}}</button>
+	</div>
+</div>
