@@ -1,7 +1,23 @@
+/*
+ * return a random x,y point
+ */
 function randomPoint(N) {
 	return {
 		x: Math.floor(Math.random() * N),
 		y: Math.floor(Math.random() * N),
+	};
+}
+
+/*
+ * create an empty cell
+ */
+function createCell() {
+	return {
+		text: '',
+		count: 0,
+		isBomb: false,
+		style: '',
+		neighbors: null,
 	};
 }
 
@@ -35,19 +51,17 @@ export default {
 		reset() {
 			this.initGrid();
 			this.addMines();
-			this.calculateCounts;
+			this.initCells();
 		},
+		/*
+		 * Create the grid of cells
+		 */
 		initGrid() {
 			this.grid = [];
 			for (let i=0; i < this.gridSize; i++) {
 				this.grid.push([]);
 				for (let j=0; j < this.gridSize; j++) {
-					this.grid[i].push({
-						text: '',
-						count: 0,
-						isBomb: false,
-						style: '',
-					});
+					this.grid[i].push(createCell());
 				}
 			}
 		},
@@ -57,22 +71,31 @@ export default {
 				this.grid[y][x].isBomb = true;
 			}
 		},
-		calculateCounts() {
+		/*
+		 * intialize the cells with data
+		 */
+		initCells() {
 			for (let y=0; y < this.gridSize; y++) {
 				for (let x=0; x < this.gridSize; x++) {
 					const cur = this.grid[y][x];
-					const tl = this.inGrid(x-1, y-1) && this.grid[y-1][x-1].isBomb ? 1 : 0; // top left
-					const tm = this.inGrid(x, y-1) && this.grid[y-1][x].isBomb ? 1 : 0; // top middle
-					const tr = this.inGrid(x+1, y-1) && this.grid[y-1][x+1].isBomb ? 1 : 0; // top right
-					const l = this.inGrid(x-1, y) && this.grid[y][x-1].isBomb ? 1 : 0; // left
-					const r = this.inGrid(x+1, y) && this.grid[y][x+1].isBomb ? 1 : 0; // right
-					const bl = this.inGrid(x-1, y+1) && this.grid[y+1][x-1].isBomb ? 1 : 0; // bottom left
-					const bm = this.inGrid(x, y+1) && this.grid[y+1][x].isBomb ? 1 : 0; // bottom middle
-					const br = this.inGrid(x+1, y+1) && this.grid[y+1][x+1].isBomb ? 1 : 0; // bottom right
-					cur.count = [tl, tm, tr, l, r, bl, bm, br]
-						.reduce((a, b) => a + b, 0);
+					const neighbors = this.getNeighbors(x, y);
+					cur.count = neighbors.reduce((sum, cell) => sum + (cell !== null && cell.isBomb ? 1 : 0), 0);
+					cur.neighbors = neighbors;
 				}
 			}
+		},
+		getNeighbors(x, y) {
+			const neighbors = [
+				this.inGrid(x-1, y-1) ? this.grid[y-1][x-1] : null, // top left
+				this.inGrid(x, y-1) ? this.grid[y-1][x] : null, // top middle
+				this.inGrid(x+1, y-1) ? this.grid[y-1][x+1] : null, // top right
+				this.inGrid(x-1, y) ? this.grid[y][x-1] : null, // left
+				this.inGrid(x+1, y) ? this.grid[y][x+1] : null, // right
+				this.inGrid(x-1, y+1) ? this.grid[y+1][x-1] : null, // bottom left
+				this.inGrid(x, y+1) ? this.grid[y+1][x] : null, // bottom middle
+				this.inGrid(x+1, y+1) ? this.grid[y+1][x+1] : null, // bottom right
+			];
+			return neighbors;
 		},
 		/*
 		 * Return true if point is inside the grid
