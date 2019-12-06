@@ -6,10 +6,13 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack')
 
 module.exports = {
-	entry: './src/index.js',
+	entry: './src/index.ts',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		filename: '[name].[contenthash].js',
+	},
+	resolve: {
+		extensions: ['.wasm', '.mjs', '.js', '.json', '.ts', '.vue'],
 	},
 	optimization: {
 		runtimeChunk: 'single',
@@ -29,6 +32,11 @@ module.exports = {
 				test: /\.vue$/,
 				exclude: /node_modules/,
 				use: 'vue-loader',
+			},
+			{
+				test: /\.ts$/,
+				exclude: /node_modules/,
+				use: 'ts-loader',
 			},
 			{
 				test: /\.js$/,

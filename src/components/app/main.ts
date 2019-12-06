@@ -1,7 +1,28 @@
+import Vue from 'vue';
+
+interface Data {
+	gridSize: number;
+	numMines: number;
+	grid: Array<Array<Cell>>;
+}
+
+interface Cell {
+	text: string;
+	count: number;
+	isBomb: boolean;
+	style: string;
+	neighbors: Array<Cell>;
+}
+
+interface Point {
+	x: number;
+	y: number;
+}
+
 /*
  * return a random x,y point
  */
-function randomPoint(N) {
+function randomPoint(N: number): Point {
 	return {
 		x: Math.floor(Math.random() * N),
 		y: Math.floor(Math.random() * N),
@@ -11,7 +32,7 @@ function randomPoint(N) {
 /*
  * create an empty cell
  */
-function createCell() {
+function createCell(): Cell {
 	return {
 		text: '',
 		count: 0,
@@ -21,9 +42,9 @@ function createCell() {
 	};
 }
 
-export default {
+export default Vue.extend({
 	name: 'app',
-	data() {
+	data(): Data {
 		return {
 			gridSize: 15,
 			numMines: 50,
@@ -34,7 +55,7 @@ export default {
 		this.reset();
 	},
 	methods: {
-		cellClick(x, y) {
+		cellClick(x: number, y: number) {
 			const cell = this.grid[x][y];
 			if (cell.isBomb) {
 				cell.text = 'X';
@@ -45,7 +66,7 @@ export default {
 				this.checkZeroCell(cell);
 			}
 		},
-		checkZeroCell(cell) {
+		checkZeroCell(cell: Cell) {
 			if (cell !== null && cell.count === 0 && !cell.isBomb) {
 				cell.text = '';
 				cell.style = 'background-color: #ccc; border: none';
@@ -54,7 +75,7 @@ export default {
 				});
 			}
 		},
-		flag(x, y) {
+		flag(x: number, y: number) {
 			const cell = this.grid[x][y];
 			cell.style = 'background-color: #4c4; border: none';
 		},
@@ -94,7 +115,7 @@ export default {
 				}
 			}
 		},
-		getNeighbors(x, y) {
+		getNeighbors(x: number, y: number): Array<Cell> {
 			const neighbors = [
 				this.inGrid(x-1, y-1) ? this.grid[y-1][x-1] : null, // top left
 				this.inGrid(x, y-1) ? this.grid[y-1][x] : null, // top middle
@@ -110,8 +131,8 @@ export default {
 		/*
 		 * Return true if point is inside the grid
 		 */
-		inGrid(x, y) {
+		inGrid(x: number, y: number): boolean {
 			return x >= 0 && x < this.gridSize && y >= 0 && y < this.gridSize;
 		}
 	},
-};
+});

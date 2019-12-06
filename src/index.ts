@@ -8,6 +8,6 @@ const app = new Vue({
 	render: h => h(App)
 });
 
-if (config.env !== 'production') {
+if (config.ENV !== 'production') {
 	window.app = app;
 }
