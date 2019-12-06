@@ -42,6 +42,16 @@ export default {
 			} else {
 				cell.text = cell.count.toString();
 				cell.style = 'background-color: #ccc; border: none';
+				this.checkZeroCell(cell);
+			}
+		},
+		checkZeroCell(cell) {
+			if (cell !== null && cell.count === 0 && !cell.isBomb) {
+				cell.text = '';
+				cell.style = 'background-color: #ccc; border: none';
+				cell.neighbors.forEach(cell => {
+					this.checkZeroCell(cell);
+				});
 			}
 		},
 		flag(x, y) {
