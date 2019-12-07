@@ -38,7 +38,7 @@ function createCell(): Cell {
 		count: 0,
 		isBomb: false,
 		style: '',
-		neighbors: null,
+		neighbors: [],
 	};
 }
 
@@ -116,17 +116,19 @@ export default Vue.extend({
 			}
 		},
 		getNeighbors(x: number, y: number): Array<Cell> {
-			const neighbors = [
-				this.inGrid(x-1, y-1) ? this.grid[y-1][x-1] : null, // top left
-				this.inGrid(x, y-1) ? this.grid[y-1][x] : null, // top middle
-				this.inGrid(x+1, y-1) ? this.grid[y-1][x+1] : null, // top right
-				this.inGrid(x-1, y) ? this.grid[y][x-1] : null, // left
-				this.inGrid(x+1, y) ? this.grid[y][x+1] : null, // right
-				this.inGrid(x-1, y+1) ? this.grid[y+1][x-1] : null, // bottom left
-				this.inGrid(x, y+1) ? this.grid[y+1][x] : null, // bottom middle
-				this.inGrid(x+1, y+1) ? this.grid[y+1][x+1] : null, // bottom right
+			const points = [
+				[x-1, y-1], // top left
+				[x, y-1], // top middle
+				[x+1, y-1], // top right
+				[x-1, y], // left
+				[x+1, y], // right
+				[x-1, y+1], // bottom left
+				[x, y+1], // bottom middle
+				[x+1, y+1], // bottom right
 			];
-			return neighbors;
+			return points
+				.filter(([x, y]) => this.inGrid(x, y))
+				.map(([x, y]) => this.grid[y][x]);
 		},
 		/*
 		 * Return true if point is inside the grid

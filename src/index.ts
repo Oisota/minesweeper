@@ -9,5 +9,5 @@ const app = new Vue({
 });
 
 if (config.ENV !== 'production') {
-	window.app = app;
+	(window as any).app = app;
 }
